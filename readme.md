@@ -23,7 +23,7 @@
 - 支持按时间查找用户贴子（日历可用）
 ## 安装说明
 打开 config.php，其他文件勿动。
-···php
+```php
 $config = [
     'bduss'   => "你的BDUSS", //此处输入有后台查看权限吧务的BDUSS
     'kw'      => '吧名', //在吧名处填写需要公开吧务后台的贴吧
@@ -31,7 +31,7 @@ $config = [
     'hideopt' => true, //boolean值，是否隐藏操作人按钮，建议开启（保护操作人隐私）
 ];
 
-···
+```
 
 ## FAQ
 
@@ -42,10 +42,10 @@ $config = [
 ### 我运行时出现了一些问题，如何解决？
 
 建议 php >=5.6，部分分类贴吧配置了https，需要修改publicBackstage.class.php里面的cget方法，在curl_setopt($ch, CURLOPT_COOKIE, $cookie)语句后面填上以下内容：
-···
+```
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // https请求 不验证证书和hosts
 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-···
+```
 
 其他问题可以提问
