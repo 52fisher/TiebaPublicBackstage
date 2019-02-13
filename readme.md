@@ -4,7 +4,8 @@
 
 稳定运行几年了，最近捡起来重构了一下，不出意外不需要进行太多更新了。
 
-![DEMO](https://github.com/52fisher/TiebaPublicBackstage/blob/master/%7B8D93BF77-4AB3-4F79-ACB7-CE9E514C2773%7D.png.jpg '运行界面详情')
+
+[![VMDfT7.md.jpg](https://t1.picb.cc/uploads/2019/02/13/VMDfT7.md.jpg)](https://www.picb.cc/image/VMDfT7)
 
 ## 基本功能
 
