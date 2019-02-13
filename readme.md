@@ -4,7 +4,7 @@
 
 稳定运行几年了，最近捡起来重构了一下，不出意外不需要进行太多更新了。
 
-![DEMO](https://imgsa.baidu.com/forum/w%3D580/sign=c374e4518f26cffc692abfba89004a7d/e20d610ed9f9d72a146882d5d92a2834359bbba9.jpg '运行界面详情')
+![DEMO](https://github.com/52fisher/TiebaPublicBackstage/blob/master/%7B8D93BF77-4AB3-4F79-ACB7-CE9E514C2773%7D.png.jpg '运行界面详情')
 
 ## 基本功能
 
