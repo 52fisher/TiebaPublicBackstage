@@ -40,13 +40,3 @@ $config = [
 以火狐浏览器为例，打开浏览器进入 https://tieba.baidu.com/ ，按下F12  -> 存储 -> cookie -> BDUSS
 其他浏览器类似，不理解可以百度
 
-### 我运行时出现了一些问题，如何解决？
-
-建议 php >=5.6，部分分类贴吧配置了https，需要修改publicBackstage.class.php里面的cget方法，在`curl_setopt($ch, CURLOPT_COOKIE, $cookie)`语句后面填上以下内容：
-```
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); // https请求 不验证证书和hosts
-curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-```
-
-其他问题可以提问
