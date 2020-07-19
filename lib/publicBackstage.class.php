@@ -41,9 +41,6 @@ class publicBackstage {
 		$r = str_replace('/bawu2/platform/', './', $r);
 		$r = str_replace('/bawu2/postappeal/', './', $r);
 		//路由规则
-		if ($this->config['showpic']) {
-			$replace['/(http:\/\/imgsrc\.baidu\.com\/.*?\.jpg)/'] = './getpic?url=\1';
-		}
 		if ($this->config['hideopt']) {
 			// var_dump("隐藏面板生效");
 			$replace['/<label><input.*?value="op_uname"\/>\s*操作人<\/label>/'] = '';
@@ -52,6 +49,12 @@ class publicBackstage {
 			//操作人列表
 			$replace['/操作人<\/strong><\/div><div class="menu_options_list"><div class="options_up_btn j_up disabled">[\w\W]+?<\/div>[\w\W]+?<\/div>[\w\W]+?<\/div>/'] = '操作人</strong></div>';
 			//操作人面板
+		}
+		if($this->config['hidetext']){
+			$replace['/<div\s*class="post_text">.*?<\/div>/']='<div class="post_text">根据贴吧相关规定，内容暂不开放查看</div>';
+			$replace['/<div\s*class="post_media">.*?<\/div>/']='<div class="post_media"></div>';
+		}else if ($this->config['showpic']) {
+			$replace['/(http:\/\/imgsrc\.baidu\.com\/.*?\.jpg)/'] = './getpic?url=\1';
 		}
 		foreach ($replace as $k => $v) {
 			$r = preg_replace($k, $v, $r);
