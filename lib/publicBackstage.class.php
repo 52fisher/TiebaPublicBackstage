@@ -21,7 +21,7 @@ class publicBackstage
     public function __construct($config)
     {
         $this->config = $config;
-        $this->cookies = 'BDUSS=' . $config['bduss'];
+        $this->cookies = 'BDUSS=' . $config['bduss'].';';
     }
     protected function verify()
     {
@@ -29,8 +29,8 @@ class publicBackstage
 
         //处理当前账号担任多吧吧务时的跨吧安全问题
         $querylist = [];
-        parse_str(parse_url($_SERVER['REQUEST_URI'])['query'], $querylist);
-        if (isset($querylist['word']) && $querylist['word'] != mb_convert_encoding($this->config['kw'], 'GBK', 'UTF-8')) {
+        isset($_SERVER['REQUEST_URI']['query'])? parse_str(parse_url($_SERVER['REQUEST_URI'])['query'], $querylist):null;
+        if (isset($querylist['word']) && $querylist['word'] != $this->config['kw']) {
             $this->showerr();
             die;
         }
@@ -48,7 +48,7 @@ class publicBackstage
         $replace = [
             '/<div class="user_info">.+?<\/div><nav/' => '<div class="user_info"><div class="user_info"><h2 style="color:white;">吧务公开后台</h2><p style="color:white;">所在吧：' . $this->config['kw'] . '吧<br> Powered By 投江的鱼</p></div></div><nav', //吧标题栏
             '/href="\/(p|home)/' => 'href="http://tieba.baidu.com/\1', //跳转帖子详情页
-            '/<img src="\/([^\/])/' => '<img src="http://tieba.baidu.com/\1', //图片链接
+            '/<img src="\/([^\/])/' => '<img referrerpolicy="no-referrer" src="//tieba.baidu.com/\1', //图片链接
         ];
         //$r = str_replace('<div class="bazhu">', '<div class="bazhu" style="display:none">', $r); //吧主app广告已下线无需净化
         $r = str_replace('/bawu2/platform/', './', $r);
@@ -67,7 +67,8 @@ class publicBackstage
             $replace['/<div\s*class="post_text">.*?<\/div>/'] = '<div class="post_text">根据贴吧相关规定，内容暂不开放查看</div>';
             $replace['/<div\s*class="post_media">.*?<\/div>/'] = '<div class="post_media"></div>';
         } else if ($this->config['showpic']) {
-            $replace['/(http:\/\/imgsrc\.baidu\.com\/.*?\.jpg)/'] = './getpic?url=\1';
+            $replace['/<img src="[^"]+" original="(http:\/\/imgsrc.baidu.com[^"]+)/']= '<img referrerpolicy="no-referrer" src="\1" style="max-height:75px;"';
+            $replace['/<img src="[^"]+" original="(http:\/\/tiebapic.baidu.com[^"]+)/']= '<img referrerpolicy="no-referrer" src="\1" style="max-height:75px;"';
         }
         foreach ($replace as $k => $v) {
             $r = preg_replace($k, $v, $r);
