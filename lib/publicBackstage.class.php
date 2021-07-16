@@ -21,7 +21,7 @@ class publicBackstage
     public function __construct($config)
     {
         $this->config = $config;
-        $this->cookies = 'BDUSS=' . $config['bduss'].';';
+        $this->cookies = 'BDUSS=' . $config['bduss'] . ';';
     }
     protected function verify()
     {
@@ -29,19 +29,23 @@ class publicBackstage
 
         //处理当前账号担任多吧吧务时的跨吧安全问题
         $querylist = [];
-        isset($_SERVER['REQUEST_URI']['query'])? parse_str(parse_url($_SERVER['REQUEST_URI'])['query'], $querylist):null;
+        isset($_SERVER['REQUEST_URI']['query']) ? parse_str(parse_url($_SERVER['REQUEST_URI'])['query'], $querylist) : null;
         if (isset($querylist['word']) && $querylist['word'] != $this->config['kw']) {
             $this->showerr();
             die;
         }
-
+        //验证吧务后台口令
+        if (!empty($this->config['pwd']) && !$this->verifyToken()) {
+            header("Location: /login");
+            die;
+        }
     }
     protected function showPages()
     {
         $r = $this->data;
         header("Content-type:text/html;charset=GBK");
         if (empty($r)) {
-            die('COOKIE失效或无权限');
+            die('<h2>COOKIE失效或无权限</h2>');
         }
         $this->verify();
         //净化规则
@@ -63,12 +67,15 @@ class publicBackstage
             $replace['/操作人<\/strong><\/div><div class="menu_options_list"><div class="options_up_btn j_up disabled">[\w\W]+?<\/div>[\w\W]+?<\/div>[\w\W]+?<\/div>/'] = '操作人</strong></div>';
             //操作人面板
         }
+        if($this->config['newNav']){
+            $replace['/<aside [\s\S]+<\/aside>/'] = require_once ROOT.'/lib/nav.tpl.php';
+        }
         if ($this->config['hidetext']) {
             $replace['/<div\s*class="post_text">.*?<\/div>/'] = '<div class="post_text">根据贴吧相关规定，内容暂不开放查看</div>';
             $replace['/<div\s*class="post_media">.*?<\/div>/'] = '<div class="post_media"></div>';
         } else if ($this->config['showpic']) {
-            $replace['/<img src="[^"]+" original="(http:\/\/imgsrc.baidu.com[^"]+)/']= '<img referrerpolicy="no-referrer" src="\1" style="max-height:75px;"';
-            $replace['/<img src="[^"]+" original="(http:\/\/tiebapic.baidu.com[^"]+)/']= '<img referrerpolicy="no-referrer" src="\1" style="max-height:75px;"';
+            $replace['/<img src="[^"]+" original="(http:\/\/imgsrc.baidu.com[^"]+)/'] = '<img referrerpolicy="no-referrer" src="\1" style="max-height:75px;"';
+            $replace['/<img src="[^"]+" original="(http:\/\/tiebapic.baidu.com[^"]+)/'] = '<img referrerpolicy="no-referrer" src="\1" style="max-height:75px;"';
         }
         foreach ($replace as $k => $v) {
             $r = preg_replace($k, $v, $r);
@@ -77,7 +84,8 @@ class publicBackstage
     }
     public function urlRoute($path = 'index')
     {
-        $data = ['index', 'data', 'listBawuLog', 'listPostLog', 'listUserLog', 'getpic', 'dataExcel'];
+        //功能列表，不需要的功能请直接在数组中注释掉
+        $data = ['index', 'data', 'listBawuLog', 'listPostLog', 'listUserLog', 'getpic', 'dataExcel','login'];
         if (!in_array($path, $data)) {
             $this->showerr();
             return;
@@ -127,6 +135,39 @@ class publicBackstage
         $url = empty($url[1]) ? 'http://tb1.bdstatic.com/tb/zt/tengfei/404-error.png' : $url[1];
         $this->cget($url);
         echo $this->data;
+    }
+
+    public function verifyPwd($pwd)
+    {
+        $token = password_hash($pwd,PASSWORD_DEFAULT);
+        if (password_verify($this->config['pwd'], $token)) {
+            $this->setToken($token);
+            return true;
+        }
+        return false;
+    }
+    private function setToken($token)
+    {
+        setcookie('_usertoken', $token, time() + 3600 * 24, '', '', '', true);
+    }
+    public function verifyToken()
+    {
+        if (!isset($_COOKIE['_usertoken'])) {
+            return false;
+        }
+        $token = addslashes(trim($_COOKIE['_usertoken']));
+        if (password_verify($this->config['pwd'], $token)) {
+            return true;
+        }
+        return false;
+
+    }
+    private function login(){
+        header("Content-type:text/html;charset=GBK");
+        if($this->verifyToken()){
+            header("Location: /index");
+        }
+        require_once ROOT."/lib/login.php";
     }
     protected function cget($url, $cookie = null)
     {
