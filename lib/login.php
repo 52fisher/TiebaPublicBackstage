@@ -5,6 +5,7 @@ if (isset($_POST['pwd'])) {
     if (!$this->verifyPwd(addslashes(trim($pwd)))) {
         $msg = '<p style="background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);border-color: #d83832;color: #dd514c;padding: 5px;margin: 10px;text-align: center;">??????????????????!</p>';
     }
+    header("Location: /index");
 }
 // header("Content-type:text/html;charset=GBK");
 header("X-Content-Type-Options:nosniff");
