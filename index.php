@@ -1,10 +1,14 @@
 <?php
-/**
- *
- * @authors fisher (i@qnmlgb.trade)
- * @date    2019-02-13
- * @version 1.0
+/*
+ * @Author: fisher(i@qnmlgb.trade)
+ * @Date: 2021-06-20 19:47:23
+ * @LastEditTime: 2021-10-06 03:26:29
+ * @Description: 主页路由文件，请勿修改
+ * @FilePath: /TiebaPublicBackstage/index.php
+ * 
+ * 
  */
+
 define('ROOT',dirname(__FILE__));
 require './config.php';
 require 'lib/publicBackstage.class.php';

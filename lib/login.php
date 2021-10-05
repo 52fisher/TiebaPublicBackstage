@@ -2,10 +2,10 @@
 $msg = '';
 if (isset($_POST['pwd'])) {
     $pwd = (string) $_POST['pwd'];
-    if (!$this->verifyPwd(addslashes(trim($pwd)))) {
-        $msg = '<p style="background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);border-color: #d83832;color: #dd514c;padding: 5px;margin: 10px;text-align: center;">??????????????????!</p>';
+    if ($this->verifyPwd(addslashes(trim($pwd)))) {
+        header("Location: /index");
     }
-    header("Location: /index");
+    $msg = '<p style="background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);border-color: #d83832;color: #dd514c;padding: 5px;margin: 10px;text-align: center;">口令有误！</p>';
 }
 // header("Content-type:text/html;charset=GBK");
 header("X-Content-Type-Options:nosniff");
@@ -14,6 +14,7 @@ header("X-Content-Type-Options:nosniff");
 <html lang="zh-CN">
 <head>
     <meta charset="GBK">
+    <link rel="icon" href="data:image/ico;base64,aWNv">
     <title>吧务公开后台-登录</title>
     <style>
 html, body{ position: relative; min-height: 100vh; background-color: #E1E8EE; display: flex; align-items: center; justify-content: center; font-family:"Fira Sans", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}

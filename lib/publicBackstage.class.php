@@ -1,9 +1,12 @@
 <?php
-/**
- *
- * @authors fisher (i@qnmlgb.trade)
- * @date    2019-02-12
- * @version 2.0
+/*
+ * @Author: fisher(i@qnmlgb.trade)
+ * @Date: 2021-06-19 03:28:32
+ * @LastEditTime: 2021-10-06 03:34:27
+ * @Description: 主功能文件
+ * @FilePath: /TiebaPublicBackstage/lib/publicBackstage.class.php
+ * 
+ * 
  */
 
 class publicBackstage
@@ -130,6 +133,7 @@ class publicBackstage
     }
     protected function getpic()
     {
+        //转存图片，此功能已被其他方案替代
         header("Content-type: image/png");
         preg_match('/url=(.*)/', $_SERVER['REQUEST_URI'], $url);
         $url = empty($url[1]) ? 'http://tb1.bdstatic.com/tb/zt/tengfei/404-error.png' : $url[1];
