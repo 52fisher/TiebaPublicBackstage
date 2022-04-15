@@ -2,7 +2,7 @@
 /*
  * @Author: fisher(i@qnmlgb.trade)
  * @Date: 2021-06-19 03:28:32
- * @LastEditTime: 2021-10-06 03:34:27
+ * @LastEditTime: 2022-04-16 01:27:12
  * @Description: 主功能文件
  * @FilePath: /TiebaPublicBackstage/lib/publicBackstage.class.php
  * 
@@ -77,8 +77,8 @@ class publicBackstage
             $replace['/<div\s*class="post_text">.*?<\/div>/'] = '<div class="post_text">根据贴吧相关规定，内容暂不开放查看</div>';
             $replace['/<div\s*class="post_media">.*?<\/div>/'] = '<div class="post_media"></div>';
         } else if ($this->config['showpic']) {
-            $replace['/<img src="[^"]+" original="(http:\/\/imgsrc.baidu.com[^"]+)/'] = '<img referrerpolicy="no-referrer" src="\1" style="max-height:75px;"';
-            $replace['/<img src="[^"]+" original="(http:\/\/tiebapic.baidu.com[^"]+)/'] = '<img referrerpolicy="no-referrer" src="\1" style="max-height:75px;"';
+            $replace['/<img src="[^"]+" original="http:(\/\/imgsrc.baidu.com[^"]+)/'] = '<img referrerpolicy="no-referrer" src="\1" style="max-height:75px;"';
+            $replace['/<img src="[^"]+" original="http:(\/\/tiebapic.baidu.com[^"]+)/'] = '<img referrerpolicy="no-referrer" src="\1" style="max-height:75px;"';
         }
         foreach ($replace as $k => $v) {
             $r = preg_replace($k, $v, $r);
@@ -102,33 +102,33 @@ class publicBackstage
     }
     protected function index()
     {
-        $this->cget($this::INDEX . $this->config['kw']);
+        $this->cget($this::INDEX,true);
         $this->showPages();
     }
     protected function dataExcel()
     {
-        $this->cget($this::EXCEL . $this->config['kw']);
-        header("Content-Type:application/vnd.ms-excel; charset=GBK");
+        $this->cget($this::EXCEL,true);
+        header('Content-Type:application/vnd.ms-excel; charset=GBK; Content-Disposition: attachment; filename="bawu_'.date('Ymd').'.xls"');
         echo $this->data;
     }
     protected function listBawuLog()
     {
-        $this->cget($this::BAWU . $this->config['kw'] . '&' . parse_url($_SERVER['REQUEST_URI'])['query']);
+        $this->cget($this::BAWU,true);
         $this->showPages();
     }
     protected function listPostLog()
     {
-        $this->cget($this::POST . $this->config['kw'] . '&' . parse_url($_SERVER['REQUEST_URI'])['query']);
+        $this->cget($this::POST,true);
         $this->showPages();
     }
     protected function listUserLog()
     {
-        $this->cget($this::USER . $this->config['kw'] . '&' . parse_url($_SERVER['REQUEST_URI'])['query']);
+        $this->cget($this::USER,true);
         $this->showPages();
     }
     protected function data()
     {
-        $this->cget($this::DATA . $this->config['kw']);
+        $this->cget($this::DATA,true);
         $this->showPages();
     }
     protected function getpic()
@@ -173,9 +173,10 @@ class publicBackstage
         }
         require_once ROOT."/lib/login.php";
     }
-    protected function cget($url, $cookie = null)
+    protected function cget($url,$addQueryParam=false, $cookie = null)
     {
         $cookie = isset($cookie) ? $cookie : $this->cookies;
+        $url .= $addQueryParam ? $this->config['kw'] . '&' . parse_url($_SERVER['REQUEST_URI'])['query'] : null;
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0', 'Connection:keep-alive', 'Referer:http://wapp.baidu.com/'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
