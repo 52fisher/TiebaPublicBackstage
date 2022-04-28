@@ -2,7 +2,7 @@
 /*
  * @Author: fisher(i@qnmlgb.trade)
  * @Date: 2021-06-19 03:28:32
- * @LastEditTime: 2022-04-16 01:27:12
+ * @LastEditTime: 2022-04-29 00:59:45
  * @Description: 主功能文件
  * @FilePath: /TiebaPublicBackstage/lib/publicBackstage.class.php
  * 
@@ -14,12 +14,12 @@ class publicBackstage
     protected $config = '';
     protected $cookies = '';
     protected $data = '';
-    const INDEX = 'http://tieba.baidu.com/bawu2/platform/index?word=';
-    const POST = 'http://tieba.baidu.com/bawu2/platform/listPostLog?word=';
-    const USER = 'http://tieba.baidu.com/bawu2/platform/listUserLog?word=';
-    const DATA = 'http://tieba.baidu.com/bawu2/platform/data?word=';
-    const BAWU = 'http://tieba.baidu.com/bawu2/platform/listBawuLog?word=';
-    const EXCEL = 'http://tieba.baidu.com/bawu2/platform/dataExcel?word=';
+    const INDEX = 'https://tieba.baidu.com/bawu2/platform/index?word=';
+    const POST = 'https://tieba.baidu.com/bawu2/platform/listPostLog?word=';
+    const USER = 'https://tieba.baidu.com/bawu2/platform/listUserLog?word=';
+    const DATA = 'https://tieba.baidu.com/bawu2/platform/data?word=';
+    const BAWU = 'https://tieba.baidu.com/bawu2/platform/listBawuLog?word=';
+    const EXCEL = 'https://tieba.baidu.com/bawu2/platform/dataExcel?word=';
 
     public function __construct($config)
     {
@@ -107,8 +107,8 @@ class publicBackstage
     }
     protected function dataExcel()
     {
+        header('Content-Disposition: attachment; filename="bawu_'.date('Ymd').'.xls"');
         $this->cget($this::EXCEL,true);
-        header('Content-Type:application/vnd.ms-excel; charset=GBK; Content-Disposition: attachment; filename="bawu_'.date('Ymd').'.xls"');
         echo $this->data;
     }
     protected function listBawuLog()
